@@ -76,6 +76,9 @@ class VAE(torch.nn.Module):
 
 
 def latent_loss(z_mean, z_stddev):
+    """
+    Return KL(N(mu, sigma^2)||N(0, 1))
+    """
     mean_sq = z_mean * z_mean
     stddev_sq = z_stddev * z_stddev
     return 0.5 * torch.mean(mean_sq + stddev_sq - torch.log(stddev_sq) - 1)
@@ -103,8 +106,8 @@ if __name__ == '__main__':
 
     optimizer = optim.Adam(vae.parameters(), lr=0.0001)
     l = None
-    for epoch in range(100):
-        for i, data in enumerate(dataloader, 0):
+    for epoch in range(10):
+        for i, data in enumerate(dataloader):
             inputs, classes = data
             inputs, classes = Variable(inputs.resize_(batch_size, input_dim)), Variable(classes)
             optimizer.zero_grad()
